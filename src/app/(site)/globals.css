@@ -63,6 +63,8 @@ p.lead { color:var(--g600); font-size:18px; max-width:560px; margin:0 0 var(--s5
 .marq:hover .marq-track { animation-play-state:paused; }
 .logo { display:inline-flex; align-items:center; gap:var(--s2); color:rgba(255,255,255,.75); font-weight:600; font-size:15px; letter-spacing:-.01em; white-space:nowrap; }
 .logo svg { width:20px; height:20px; }
+.logo-img { height:24px; width:auto; object-fit:contain; filter:grayscale(1); opacity:.6; transition:opacity .15s, filter .15s; }
+.logo:hover .logo-img { filter:none; opacity:1; }
 @keyframes marq { to { transform:translateX(-50%); } }
 @media (prefers-reduced-motion:reduce) { .marq-track { animation:none; } }
 

@@ -12,6 +12,8 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Jobs } from './collections/Jobs'
 import { Applications } from './collections/Applications'
+import { LogoMedia } from './collections/LogoMedia'
+import { ClientLogos } from './globals/ClientLogos'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,7 +24,8 @@ export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   admin: { user: Users.slug, importMap: { baseDir: path.resolve(dirname) } },
   i18n: { supportedLanguages: { fr }, fallbackLanguage: 'fr' },
-  collections: [Users, Jobs, Applications, Media],
+  collections: [Users, Jobs, Applications, Media, LogoMedia],
+  globals: [ClientLogos],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -47,7 +50,7 @@ export default buildConfig({
   plugins: [
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: true },
+      collections: { media: true, 'logo-media': true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
       addRandomSuffix: true, // unguessable blob URLs; files are served via Payload access control
     }),

@@ -24,7 +24,7 @@ export default async function HomePage() {
           </div>
           <div className="hero-img"><div><b>Zone réservée à l’image</b>Image personnalisée à fournir</div></div>
         </div>
-        <div className="marq-wrap"><div className="wrap"><Marquee /></div></div>
+        <Marquee />
       </section>
 
       <div className="wrap">

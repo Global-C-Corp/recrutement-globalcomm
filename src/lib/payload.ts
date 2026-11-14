@@ -39,3 +39,24 @@ export const getJobBySlug = (slug: string) =>
     ['job', slug],
     { tags: ['jobs'], revalidate: 60 },
   )()
+
+export type ClientLogo = { id: string; name: string; url: string | null; src: string; width: number; isSvg: boolean }
+
+/** Client logos for the hero marquee, in admin order. Tagged so saves revalidate within seconds. */
+export const getClientLogos = unstable_cache(
+  async (): Promise<ClientLogo[]> => {
+    const payload = await getPayloadClient()
+    const g = await payload.findGlobal({ slug: 'client-logos', depth: 1 })
+    const out: ClientLogo[] = []
+    for (const row of g.logos ?? []) {
+      const img = row.image
+      if (!img || typeof img !== 'object' || !img.url) continue
+      const isSvg = img.mimeType === 'image/svg+xml'
+      const w = img.width && img.height ? Math.round((img.width / img.height) * 24) : 96
+      out.push({ id: row.id ?? String(out.length), name: row.name, url: row.url ?? null, src: img.url, width: Math.max(24, Math.min(w, 240)), isSvg })
+    }
+    return out
+  },
+  ['client-logos'],
+  { tags: ['client-logos'], revalidate: 60 },
+)

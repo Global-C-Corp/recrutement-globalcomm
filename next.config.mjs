@@ -10,6 +10,7 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: { localPatterns: [{ pathname: '/api/logo-media/file/**' }] },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },

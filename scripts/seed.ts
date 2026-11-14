@@ -40,4 +40,18 @@ for (const j of JOBS) {
   await payload.create({ collection: 'jobs', data: { ...j, status: 'open', tags: [...j.tags], missions: [...j.missions], profil: [...j.profil], offre: [...j.offre] } as never })
   console.log('créé :', j.slug)
 }
+// PLACEHOLDER client logos (generated SVG wordmarks): dev only, replace with real logos in /admin.
+const gl = await payload.findGlobal({ slug: 'client-logos', depth: 0 })
+if ((gl.logos ?? []).length === 0) {
+  const rows: { image: number; name: string }[] = []
+  for (let i = 1; i <= 6; i++) {
+    const name = `Client ${String(i).padStart(2, '0')}`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="140" height="32" viewBox="0 0 140 32"><rect x="0" y="6" width="20" height="20" rx="4" fill="#fff"/><text x="28" y="23" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#fff">${name}</text></svg>`
+    const buf = Buffer.from(svg)
+    const doc = await payload.create({ collection: 'logo-media', data: {}, file: { data: buf, mimetype: 'image/svg+xml', name: `placeholder-client-${i}.svg`, size: buf.length } })
+    rows.push({ image: doc.id, name })
+  }
+  await payload.updateGlobal({ slug: 'client-logos', data: { logos: rows } })
+  console.log('logos de remplacement créés (placeholders)')
+}
 process.exit(0)
