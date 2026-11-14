@@ -1,0 +1,64 @@
+{
+  "name": "recrutement-globalcomm",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "payload migrate && next build",
+    "start": "next start",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "payload": "payload",
+    "migrate": "payload migrate",
+    "seed": "payload run scripts/seed.ts",
+    "create-admin": "payload run scripts/create-admin.ts"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.93.0",
+    "@payloadcms/email-nodemailer": "3.93.0",
+    "@payloadcms/next": "3.93.0",
+    "@payloadcms/richtext-lexical": "3.93.0",
+    "@payloadcms/storage-vercel-blob": "3.93.0",
+    "@payloadcms/translations": "3.93.0",
+    "@payloadcms/ui": "3.93.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "file-type": "^22.3.0",
+    "geist": "^1.9.2",
+    "graphql": "^16.15.0",
+    "lucide-react": "^1.73.0",
+    "next": "16.4.6",
+    "nodemailer": "^10.5.0",
+    "payload": "3.93.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sharp": "^0.35.5",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^18.0.10",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "@swc/core",
+      "unrs-resolver"
+    ]
+  }
+}
