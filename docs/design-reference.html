@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recrutement — Global Comm (démo UX)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+<style>
+  /* Geist-style tokens: 4px spacing scale, gray scale, 6px/12px radii */
+  :root {
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s8:48px; --s10:64px; --s12:96px;
+    --r-sm:4px; --r-md:6px; --r-lg:12px;
+    --accent:#0000ff; --ink:#171717; --g600:#666; --g500:#808080; --line:#eaeaea; --bg:#fafafa; --card:#fff;
+    --err:#e5484d; --ok:#0f9d58;
+    --font:'Geist',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:var(--font); color:var(--ink); background:var(--bg); line-height:1.5; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; }
+  .wrap { max-width:960px; margin:0 auto; padding:0 var(--s5); }
+  header { background:var(--card); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand { font-weight:600; text-decoration:none; letter-spacing:-.01em; font-size:15px; }
+  .brand span { color:var(--accent); }
+  header small { color:var(--g600); font-size:13px; }
+  main { padding:0; }
+  .pad { padding-top:var(--s8); padding-bottom:var(--s12); }
+  h1 { font-size:clamp(32px,5vw,48px); line-height:1.08; letter-spacing:-.04em; margin:0 0 var(--s4); font-weight:600; }
+  h2 { font-size:24px; margin:0; letter-spacing:-.03em; font-weight:600; }
+  p.lead { color:var(--g600); font-size:18px; max-width:560px; margin:0 0 var(--s5); }
+
+  /* Buttons — Geist medium: 40px, 6px radius */
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:40px; padding:0 var(--s4); background:var(--ink); color:#fff; border:1px solid var(--ink); border-radius:var(--r-md); font:500 14px var(--font); cursor:pointer; text-decoration:none; transition:background .15s, border-color .15s; }
+  .btn:hover { background:#383838; border-color:#383838; }
+  .btn.blue { background:var(--accent); border-color:var(--accent); }
+  .btn.blue:hover { background:#0000d6; border-color:#0000d6; }
+  .btn.ghost { background:#fff; color:var(--ink); border-color:var(--line); }
+  .btn.ghost:hover { background:#f5f5f5; }
+  .btn[disabled] { opacity:.6; cursor:wait; }
+
+  /* Hero */
+  .hero { position:relative; min-height:60vh; display:flex; flex-direction:column; color:#fff; background:radial-gradient(1200px 420px at 85% -10%,rgba(120,120,255,.5),transparent 60%),linear-gradient(135deg,#00002b 0%,#00005e 55%,#0000ff 130%); }
+  .hero .main { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:var(--s8); align-items:stretch; padding-top:var(--s8); padding-bottom:0; }
+  .hero-left { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:var(--s6); padding-bottom:var(--s10); }
+  .hero > .wrap { width:100%; min-width:0; }
+  .hero h1 { color:#fff; }
+  .hero p.lead { color:rgba(255,255,255,.72); }
+  .hero .btn { background:#fff; color:var(--ink); border-color:#fff; }
+  .hero .btn:hover { background:#eaeaea; border-color:#eaeaea; }
+  .eyebrow { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:var(--s3); font-weight:500; }
+  .hero-img { align-self:end; height:100%; min-height:300px; border:1px dashed rgba(255,255,255,.3); border-bottom:0; border-radius:var(--r-lg) var(--r-lg) 0 0; display:grid; place-items:center; text-align:center; color:rgba(255,255,255,.55); font-size:13px; padding:var(--s5); background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 12px,transparent 12px 24px); }
+  .hero-img b { display:block; color:rgba(255,255,255,.85); font-weight:500; margin-bottom:var(--s1); }
+  .pills { display:flex; flex-wrap:nowrap; gap:var(--s2); margin-bottom:var(--s5); overflow-x:auto; scrollbar-width:none; }
+  .pills::-webkit-scrollbar { display:none; }
+  .pill { flex:0 0 auto; display:inline-flex; align-items:center; gap:var(--s2); height:36px; padding:0 var(--s3); border-radius:var(--r-md); border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.07); font-size:14px; white-space:nowrap; }
+  .pill svg { width:16px; height:16px; color:#fff; flex:none; }
+  .pill .k { color:rgba(255,255,255,.62); }
+  .pill .v { color:#fff; font-weight:600; }
+
+  /* Logo marquee: label + logos on one line, left-column width */
+  .marq-wrap { position:absolute; left:0; right:0; bottom:var(--s5); z-index:3; pointer-events:none; }
+  .marq { pointer-events:auto; width:100%; display:flex; align-items:center; gap:var(--s4); }
+  .marq-label { flex:none; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); font-weight:500; white-space:nowrap; }
+  .marq-view { flex:1; min-width:0; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent); mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent); }
+  .marq-track { display:flex; gap:var(--s6); width:max-content; animation:marq 26s linear infinite; }
+  .marq:hover .marq-track { animation-play-state:paused; }
+  .logo { display:inline-flex; align-items:center; gap:var(--s2); color:rgba(255,255,255,.75); font-weight:600; font-size:15px; letter-spacing:-.01em; white-space:nowrap; }
+  .logo svg { width:20px; height:20px; }
+  @keyframes marq { to { transform:translateX(-50%); } }
+  @media (prefers-reduced-motion:reduce) { .marq-track { animation:none; } }
+
+
+  /* Positioning statement */
+  .pos { position:relative; min-height:72vh; display:grid; place-items:center; overflow:hidden; background:#00001c; }
+  .pos canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .pos-ov { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 45%,rgba(0,0,28,.55),rgba(0,0,28,0) 70%); }
+  .pos-in { position:relative; z-index:1; max-width:960px; padding:var(--s12) var(--s5); text-align:center; color:#fff; pointer-events:none; }
+  .pos .kick { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,.85); margin-bottom:var(--s5); }
+  .pos-t { margin:0; font-size:clamp(36px,7vw,84px); line-height:1.06; letter-spacing:-.04em; font-weight:400; text-shadow:0 2px 28px rgba(0,0,80,.45); }
+  .pos-t .w { display:inline-block; white-space:nowrap; }
+  .pos-t .ch { display:inline-block; font-variation-settings:'wght' 400; }
+  .pos-foot { position:absolute; left:0; right:0; bottom:0; z-index:1; display:flex; justify-content:space-between; gap:var(--s4); padding:var(--s4) var(--s5); border-top:1px solid rgba(255,255,255,.2); font-size:13px; color:rgba(255,255,255,.8); max-width:none; }
+  .pos-foot a { color:#fff; text-decoration:none; font-weight:500; }
+  .pos-foot a:hover { text-decoration:underline; }
+  .pos-p { text-wrap:balance; margin:var(--s6) auto 0; max-width:560px; font-size:18px; line-height:1.55; color:rgba(255,255,255,.92); }
+
+  /* Sections */
+  .sec { margin-top:var(--s10); }
+  .wrap > .note { margin-bottom:var(--s10); }
+  .sec-head { display:flex; flex-direction:column; gap:var(--s2); margin-bottom:var(--s5); max-width:640px; }
+  .kicker { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .sec-head p { margin:0; color:var(--g600); font-size:16px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s4); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:var(--s5); }
+  .card h3 { margin:0 0 var(--s1); font-size:16px; font-weight:600; letter-spacing:-.01em; }
+  .card p { margin:0; color:var(--g600); font-size:14px; }
+  .jcard { display:flex; flex-direction:column; gap:var(--s3); background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:var(--s5); text-decoration:none; transition:border-color .15s, box-shadow .15s; }
+  .jcard:hover { border-color:#c9c9c9; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .jcard h3 { margin:0; font-size:18px; line-height:1.3; letter-spacing:-.02em; font-weight:600; }
+  .jcard p { margin:0; color:var(--g600); font-size:14px; flex:1; }
+  .jcard .go { font-size:14px; font-weight:500; color:var(--accent); }
+  /* Geist badge: 12px, 24px high, 4px radius */
+  .badge { display:inline-flex; align-items:center; height:24px; padding:0 var(--s2); border-radius:var(--r-sm); font-size:12px; font-weight:500; background:#ebf0ff; color:#0000d6; }
+  .badge.stage { background:#fff4d6; color:#8a5a00; }
+  .spont.dark { background:linear-gradient(135deg,#00002b 0%,#0000c8 130%); border-color:transparent; color:#fff; }
+  .spont.dark p { color:rgba(255,255,255,.72); }
+  .spont.dark .btn.ghost { background:#fff; color:var(--ink); border-color:#fff; }
+  .spont.dark .btn.ghost:hover { background:#eaeaea; }
+  .spont { display:flex; justify-content:space-between; align-items:center; gap:var(--s4); flex-wrap:wrap; margin-top:var(--s4); }
+  .crumb { font-size:14px; color:var(--g600); margin-bottom:var(--s4); display:inline-block; text-decoration:none; }
+  .crumb:hover { color:var(--accent); }
+  ul.clean { padding-left:var(--s5); margin:var(--s2) 0 0; } ul.clean li { margin:var(--s1) 0; }
+  .two { display:grid; grid-template-columns:1.2fr 1fr; gap:var(--s8); align-items:start; }
+  .two h2 { margin-top:var(--s6); }
+
+
+  /* Job page */
+  .jhead { background:radial-gradient(1000px 360px at 90% -20%,rgba(120,120,255,.5),transparent 60%),linear-gradient(135deg,#00002b 0%,#00005e 55%,#0000ff 140%); color:#fff; padding:var(--s6) 0 var(--s8); }
+  .jhead .crumb { color:rgba(255,255,255,.7); margin-bottom:var(--s5); }
+  .jhead .crumb:hover { color:#fff; }
+  .jhead h1 { color:#fff; max-width:760px; margin:var(--s3) 0; }
+  .jhead .lead { color:rgba(255,255,255,.75); margin-bottom:var(--s5); max-width:640px; }
+  .jhead .badge { background:rgba(255,255,255,.14); color:#fff; }
+  .facts { display:flex; flex-wrap:wrap; gap:var(--s2); }
+  .jbody { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:var(--s8); align-items:start; padding-top:var(--s8); padding-bottom:var(--s10); }
+  .jmain h2 { font-size:20px; margin:var(--s8) 0 var(--s4); }
+  .jmain h2:first-child { margin-top:0; }
+  .checks { list-style:none; padding:0; margin:0; display:grid; gap:var(--s3); }
+  .checks li { display:flex; gap:var(--s3); align-items:flex-start; font-size:16px; }
+  .checks svg { flex:none; width:20px; height:20px; margin-top:2px; color:var(--accent); }
+  .fcard { position:sticky; top:var(--s5); }
+  .fcard h3 { margin:0 0 var(--s1); font-size:18px; }
+  .fcard .sub { margin:0 0 var(--s5); color:var(--g600); font-size:14px; }
+  .trust { margin:var(--s3) 0 0; font-size:12px; color:var(--g600); }
+  .others { margin-top:var(--s10); }
+  .others h2 { font-size:20px; margin:0 0 var(--s4); }
+  .grid2 { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s4); }
+  .next { display:grid; gap:var(--s4); }
+  .next .n { display:flex; gap:var(--s3); }
+  .next .n b { flex:none; width:24px; height:24px; border-radius:50%; background:var(--accent); color:#fff; font-size:12px; display:grid; place-items:center; }
+  .next .n p { margin:0; color:var(--g600); font-size:15px; }
+  .next .n p strong { color:var(--ink); display:block; }
+
+
+  /* Job page v2 (light, reference-style) */
+  .jh { background-color:#fcfcfd; background-image:linear-gradient(rgba(0,0,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,255,.045) 1px,transparent 1px); background-size:48px 48px; -webkit-mask-image:linear-gradient(#000 70%,transparent); mask-image:linear-gradient(#000 70%,transparent); }
+  .jhw { position:relative; padding:var(--s8) 0 var(--s2); }
+  .co { display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s4); }
+  .co .logo { width:48px; height:48px; border-radius:var(--r-lg); background:var(--accent); color:#fff; font-weight:700; font-size:15px; display:grid; place-items:center; }
+  .co b { display:block; font-size:14px; font-weight:600; }
+  .co span { display:flex; align-items:center; gap:var(--s1); font-size:12px; color:var(--g600); }
+  .co span svg { width:12px; height:12px; }
+  .jhw h1 { margin:0 0 var(--s4); font-size:clamp(36px,5vw,52px); letter-spacing:-.03em; }
+  .tags { display:flex; flex-wrap:wrap; gap:var(--s2); }
+  .tag { display:inline-flex; align-items:center; gap:var(--s2); height:32px; padding:0 var(--s3); border-radius:var(--r-md); border:1px solid #e3e3ee; background:#fff; font-size:13px; white-space:nowrap; }
+  .tag svg { width:14px; height:14px; color:var(--accent); flex:none; }
+  .tag .k { color:var(--g600); }
+  .tag .v { color:var(--ink); font-weight:600; }
+  .jbody { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:var(--s10); align-items:start; padding-top:var(--s6); padding-bottom:var(--s8); }
+  .jmain { display:grid; gap:var(--s8); }
+  .jmain .sec { margin:0; padding:0; }
+  .sec h2 { font-size:24px; letter-spacing:-.02em; margin:0 0 var(--s3); }
+  .sec h2 em { font-style:normal; color:var(--accent); }
+  .sec .lead2 { margin:0; color:var(--ink); font-size:16px; line-height:1.7; }
+  .blist { margin:0; padding:0; list-style:none; display:grid; gap:var(--s2); }
+  .blist li { position:relative; padding-left:var(--s5); font-size:16px; line-height:1.6; }
+  .blist li::before { content:''; position:absolute; left:var(--s1); top:.7em; width:5px; height:5px; border-radius:50%; background:var(--ink); }
+  .sep { display:flex; align-items:center; gap:var(--s3); margin:var(--s5) 0; color:var(--accent); }
+  .sep::before,.sep::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,#d9d9ee,transparent); }
+  .sep i { width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .proc { list-style:none; margin:0; padding:0; display:grid; gap:0; }
+  .proc li { display:flex; align-items:center; gap:var(--s3); position:relative; padding-bottom:var(--s4); font-size:16px; }
+  .proc li:last-child { padding-bottom:0; }
+  .proc li b { flex:none; width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; font-size:14px; display:grid; place-items:center; z-index:1; }
+  .proc li:not(:last-child)::after { content:''; position:absolute; left:15px; top:32px; bottom:0; width:2px; background:#d9d9ee; }
+  .fcard { position:sticky; top:var(--s5); overflow:hidden; padding-top:var(--s6); }
+  .prog { position:absolute; left:0; right:0; top:0; height:4px; background:#ececf6; }
+  .prog i { display:block; height:100%; width:0; background:var(--accent); border-radius:0 4px 4px 0; transition:width .35s cubic-bezier(.2,.8,.2,1); }
+  .prog-l { display:flex; justify-content:space-between; align-items:center; margin:0 0 var(--s4); font-size:12px; color:var(--g600); }
+  .prog-l b { color:var(--ink); font-weight:600; }
+
+
+  .contact { margin:0 0 var(--s12); padding:var(--s8) var(--s5); border-radius:var(--r-lg); background:#00001c; color:#fff; position:relative; overflow:hidden; }
+  .contact canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .contact .c-in { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:var(--s3); pointer-events:none; }
+  .contact .c-in a { pointer-events:auto; }
+  .logo-ph { width:96px; height:48px; border-radius:var(--r-md); border:1px dashed rgba(255,255,255,.45); color:rgba(255,255,255,.7); font-size:12px; display:grid; place-items:center; }
+  .contact h3 { margin:0; font-size:20px; letter-spacing:-.02em; color:#fff; }
+  .contact p { margin:0; color:rgba(255,255,255,.75); font-size:14px; max-width:440px; }
+  .contact .lines { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--s2) var(--s5); margin-top:var(--s2); }
+  .contact .lines a { text-decoration:none; display:inline-flex; align-items:center; gap:var(--s2); font-size:14px; font-weight:600; color:#fff; }
+  .contact .lines a:hover { opacity:.8; }
+  .contact .lines svg { width:16px; height:16px; color:#fff; }
+
+  /* Form — Geist input: 40px, 6px radius */
+  form { display:grid; gap:var(--s4); }
+  label { font-size:14px; font-weight:500; display:block; }
+  label .opt { color:var(--g600); font-weight:400; }
+  input[type=text],input[type=email],input[type=tel],input[type=url],select { width:100%; height:40px; margin-top:var(--s2); padding:0 var(--s3); font:14px var(--font); border:1px solid #d9d9d9; border-radius:var(--r-md); background:#fff; }
+  textarea { width:100%; margin-top:var(--s2); padding:var(--s3); font:14px var(--font); border:1px solid #d9d9d9; border-radius:var(--r-md); background:#fff; }
+  input:focus,select:focus,textarea:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(0,0,0,.08); }
+  .field.bad input,.field.bad select,.field.bad .drop { border-color:var(--err); }
+  .err { color:var(--err); font-size:13px; margin-top:var(--s1); display:none; }
+  .field.bad .err { display:block; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:var(--s4); }
+  .drop { margin-top:var(--s2); border:1px dashed #c9c9c9; border-radius:var(--r-md); padding:var(--s5); text-align:center; background:#fff; cursor:pointer; color:var(--g600); font-size:14px; }
+  .drop.over,.drop:hover { border-color:var(--accent); background:#f5f7ff; }
+  .drop.has { border-style:solid; color:var(--ink); text-align:left; display:flex; justify-content:space-between; align-items:center; }
+  .drop button { background:none; border:0; color:var(--accent); cursor:pointer; font:inherit; }
+  .check { display:flex; gap:var(--s3); align-items:flex-start; font-weight:400; font-size:14px; }
+  .check input { margin-top:var(--s1); }
+  .sticky { display:none; position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:1px solid var(--line); padding:var(--s3) var(--s5); }
+  .sticky .btn { width:100%; }
+  .thanks { text-align:center; padding:var(--s8) 0; }
+  .tick { width:56px; height:56px; border-radius:50%; background:#e6f6ec; color:var(--ok); display:grid; place-items:center; font-size:28px; margin:0 auto var(--s4); }
+  .meta { color:var(--g600); font-size:14px; }
+  .note { margin-top:var(--s10); font-size:12px; color:var(--g600); border-top:1px dashed var(--line); padding-top:var(--s4); }
+  [hidden] { display:none !important; }
+
+  /* Accordion gallery (hover to expand) */
+  .ag { display:flex; gap:10px; height:190px; }
+  .ag-init .ag-p, .ag-init .ag-img { transition:none !important; }
+  .ag-p { position:relative; flex:1 1 0; min-width:0; overflow:hidden; border-radius:16px; cursor:pointer; background:#060010; transform-style:preserve-3d; transition:flex-grow .6s cubic-bezier(.22,1,.36,1), transform .25s ease-out; will-change:flex-grow; }
+  .ag-img { position:absolute; inset:-8%; background-size:cover; background-position:center; filter:grayscale(1) brightness(.8); transition:filter .6s cubic-bezier(.22,1,.36,1), transform .25s ease-out; }
+  .ag-p.on .ag-img { filter:none; }
+  .ag-ov { position:absolute; inset:0; background:linear-gradient(180deg,rgba(6,0,16,.05) 30%,rgba(6,0,16,.82) 100%); }
+  .ag-n { position:absolute; top:16px; left:20px; font-size:13px; font-weight:600; color:#fff; opacity:.8; letter-spacing:.04em; }
+  .ag-cap { position:absolute; left:20px; right:20px; bottom:16px; color:#fff; }
+  .ag-t { margin:0; font-size:17px; font-weight:600; letter-spacing:-.02em; line-height:1.2; }
+  .ag-d { margin:var(--s2) 0 0; font-size:14px; line-height:1.5; color:rgba(255,255,255,.85); max-width:420px; opacity:0; transform:translateY(10px); max-height:0; transition:opacity .4s, transform .5s cubic-bezier(.22,1,.36,1), max-height .5s; }
+  .ag-p.on .ag-d { opacity:1; transform:none; max-height:64px; transition-delay:.12s; }
+
+  .sticky.on { }
+  @media (max-width:720px) {
+    .grid3,.two,.row,.hero .main { grid-template-columns:1fr; }
+    .hero .main { gap:var(--s6); padding-top:var(--s6); }
+    .jbody { grid-template-columns:1fr; gap:var(--s6); padding-top:var(--s6); }
+    .sep { margin:var(--s5) 0; }
+    .fcard { position:static; }
+    .grid2 { grid-template-columns:1fr; }
+    .sticky.on { display:block; }
+    main { padding-bottom:120px; }
+    .ag { flex-direction:column; height:auto; }
+    .ag-p { flex:none !important; height:56px; transform:none !important; transition:height .5s cubic-bezier(.22,1,.36,1); }
+    .ag-p.on { height:170px; }
+    .ag-n { top:auto; bottom:20px; left:auto; right:20px; }
+    .ag-p.on .ag-n { top:16px; bottom:auto; left:20px; right:auto; }
+    .ag-cap { right:56px; bottom:18px; }
+    .hero-img { min-height:260px; order:3; }
+    .hero-left { padding-bottom:0; }
+    .marq-wrap { bottom:var(--s4); }
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="brand" href="#/">Global Comm <span>Recrutement</span></a>
+  <small>Démo UX — contenu d’exemple</small>
+</div></header>
+
+<main id="app"></main>
+<div class="sticky" id="sticky"><a class="btn blue" href="#apply" id="stickyBtn">Postuler</a></div>
+
+<script>
+const JOBS = [
+  { slug:'chef-de-projet-communication', days:3, tags:[{icon:'contract',label:'Type de contrat',value:'CDI'},{icon:'mode',label:'Lieu de travail',value:'Sur site'},{icon:'experience',label:'Expérience',value:'2 - 5 ans'},{icon:'languages',label:'Langues',value:'Français'},{icon:'education',label:'Niveau d’étude',value:'BAC +3 et plus'}], title:'Chef(fe) de projet communication', type:'emploi',
+    summary:'Pilotez les campagnes de nos clients FMCG, de la stratégie à la production.',
+    missions:['Piloter les campagnes de bout en bout','Coordonner créa, production et clients','Suivre budgets et délais'],
+    profil:['Bac+3 minimum, 2 ans d’expérience en agence','Excellente expression en français','Rigueur et sens du relationnel'],
+    offre:['CDI, poste à Nador','Marques FMCG nationales','Équipe jeune et exigeante'] },
+  { slug:'stage-community-manager', days:8, tags:[{icon:'contract',label:'Type de contrat',value:'Stage (3 à 6 mois)'},{icon:'mode',label:'Lieu de travail',value:'Sur site'},{icon:'experience',label:'Expérience',value:'Débutant accepté'},{icon:'languages',label:'Langues',value:'Français'},{icon:'education',label:'Niveau d’étude',value:'BAC +2 et plus'}], title:'Stage — Community manager', type:'stage',
+    summary:'Animez les réseaux sociaux de nos marques et apprenez le métier en agence.',
+    missions:['Créer et programmer des contenus','Suivre les statistiques','Assister l’équipe lors des tournages'],
+    profil:['Étudiant(e) en communication ou marketing','Créatif(ve) et organisé(e)','Maîtrise des réseaux sociaux'],
+    offre:['Stage de 3 à 6 mois','Encadrement par un senior','Possibilité d’embauche'] },
+  { slug:'designer-graphique', days:12, tags:[{icon:'contract',label:'Type de contrat',value:'CDI ou CDD'},{icon:'mode',label:'Lieu de travail',value:'Sur site'},{icon:'experience',label:'Expérience',value:'1 - 3 ans'},{icon:'languages',label:'Langues',value:'Français'},{icon:'education',label:'Niveau d’étude',value:'BAC +2 et plus'}], title:'Designer graphique', type:'emploi',
+    summary:'Concevez des identités et supports pour des marques de grande consommation.',
+    missions:['Concevoir des visuels et packagings','Décliner les chartes graphiques','Préparer les fichiers pour l’impression'],
+    profil:['Portfolio solide','Maîtrise de la suite Adobe ou Figma','Sens du détail'],
+    offre:['CDI ou CDD','Projets variés','Matériel professionnel'] }
+];
+const app = document.getElementById('app');
+const sticky = document.getElementById('sticky');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const typeLabel = t => t === 'stage' ? 'Stage' : 'Emploi';
+
+function formHTML(job) {
+  return `
+  <form id="f" novalidate>
+    ${job ? '' : `<div class="field"><label>Poste visé
+      <select name="poste"><option>Candidature ouverte</option>${JOBS.map(j=>`<option>${esc(j.title)}</option>`).join('')}</select></label></div>`}
+    <div class="field" data-f="nom"><label>Nom complet<input type="text" name="nom" autocomplete="name"></label><div class="err">Indiquez votre nom complet.</div></div>
+    <div class="row">
+      <div class="field" data-f="email"><label>Email<input type="email" name="email" autocomplete="email"></label><div class="err">Indiquez un email valide.</div></div>
+      <div class="field" data-f="tel"><label>Téléphone<input type="tel" name="tel" autocomplete="tel" placeholder="06 00 00 00 00"></label><div class="err">Indiquez un numéro valide.</div></div>
+    </div>
+    <div class="field" data-f="cv"><label>CV <span class="opt">(PDF, DOC ou DOCX — 5 Mo max)</span></label>
+      <div class="drop" id="dropCv" tabindex="0">Glissez votre CV ici ou <u>parcourez vos fichiers</u></div>
+      <input type="file" id="cv" hidden accept=".pdf,.doc,.docx"><div class="err" id="cvErr">Ajoutez votre CV.</div></div>
+    <div class="field"><label>Portfolio / LinkedIn <span class="opt">(facultatif)</span><input type="url" name="portfolio" placeholder="Lien : https://…"></label>
+      <div class="drop" id="dropPf" tabindex="0" style="padding:12px">ou ajoutez un fichier PDF (10 Mo max)</div>
+      <input type="file" id="pf" hidden accept=".pdf"></div>
+    <div class="field" data-f="consent"><label class="check"><input type="checkbox" name="consent"><span>J’accepte que Global Comm conserve mes données pour traiter ma candidature (loi 09-08).</span></label><div class="err">Votre accord est nécessaire pour envoyer la candidature.</div></div>
+    <div><button class="btn blue" id="send" type="submit">Envoyer ma candidature</button></div>
+  </form>`;
+}
+
+function wireForm() {
+  const f = document.getElementById('f'); if (!f) return;
+  const files = { cv:null, pf:null };
+  const fmt = n => n > 1048576 ? (n/1048576).toFixed(1)+' Mo' : Math.round(n/1024)+' Ko';
+  function bindDrop(dropId, inputId, key, max, okExt, idleHTML) {
+    const drop = document.getElementById(dropId), input = document.getElementById(inputId);
+    const set = file => {
+      const ext = file ? file.name.split('.').pop().toLowerCase() : '';
+      if (file && (!okExt.includes(ext) || file.size > max)) {
+        if (key === 'cv') { const fl = drop.closest('.field'); fl.classList.add('bad'); document.getElementById('cvErr').textContent = !okExt.includes(ext) ? 'Format non accepté (PDF, DOC ou DOCX).' : 'Fichier trop volumineux (5 Mo max).'; }
+        return;
+      }
+      files[key] = file;
+      if (key === 'cv') drop.closest('.field').classList.remove('bad');
+      if (file) { drop.className = 'drop has'; drop.innerHTML = `<span>📄 ${esc(file.name)} · ${fmt(file.size)}</span><button type="button">Retirer</button>`; drop.querySelector('button').onclick = e => { e.stopPropagation(); input.value=''; set(null); }; }
+      else { drop.className = 'drop'; drop.innerHTML = idleHTML; }
+    };
+    drop.onclick = () => { if (!files[key]) input.click(); };
+    drop.onkeydown = e => { if (e.key === 'Enter' && !files[key]) input.click(); };
+    input.onchange = () => set(input.files[0] || null);
+    drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+    drop.ondragleave = () => drop.classList.remove('over');
+    drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); if (e.dataTransfer.files[0]) set(e.dataTransfer.files[0]); };
+  }
+  bindDrop('dropCv','cv','cv',5*1048576,['pdf','doc','docx'],'Glissez votre CV ici ou <u>parcourez vos fichiers</u>');
+  bindDrop('dropPf','pf','pf',10*1048576,['pdf'],'ou ajoutez un fichier PDF (10 Mo max)');
+  const bar = document.getElementById('progBar'), txt = document.getElementById('progTxt');
+  const progress = () => {
+    const d = new FormData(f);
+    const done = [d.get('nom').trim(), d.get('email').trim(), d.get('tel').trim(), files.cv, (d.get('portfolio')||'').trim() || files.pf, d.get('consent')].filter(Boolean).length;
+    bar.style.width = (done/6*100)+'%'; txt.textContent = done+' / 6';
+  };
+  f.addEventListener('input', progress); f.addEventListener('change', progress);
+  f.addEventListener('click', () => setTimeout(progress, 0)); f.addEventListener('drop', () => setTimeout(progress, 0));
+  const bad = (name, cond) => { const el = f.querySelector(`[data-f="${name}"]`); el.classList.toggle('bad', cond); return cond; };
+  f.onsubmit = e => {
+    e.preventDefault();
+    const d = new FormData(f);
+    const errs = [
+      bad('nom', d.get('nom').trim().length < 2),
+      bad('email', !/^\S+@\S+\.\S+$/.test(d.get('email').trim())),
+      bad('tel', d.get('tel').replace(/\D/g,'').length < 9),
+      bad('cv', !files.cv),
+      bad('consent', !d.get('consent'))
+    ];
+    if (!files.cv) document.getElementById('cvErr').textContent = 'Ajoutez votre CV.';
+    if (errs.some(Boolean)) { f.querySelector('.bad').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    const b = document.getElementById('send'); b.disabled = true; b.textContent = 'Envoi…';
+    setTimeout(() => { location.hash = '#/merci'; }, 1100);
+  };
+}
+
+/* ---------- Accordion gallery (vanilla port of the AccordionGallery props) ---------- */
+const GALLERY = { defaultIndex:0, expandRatio:0.52, trigger:'hover', parallax:0.5, tilt:8, stagger:0.06 };
+// Replace `image` with a URL later; the gradient is the placeholder.
+const STEPS = [
+  { title:'Candidature', text:'Vous remplissez le formulaire et joignez votre CV. Aucun compte à créer.', image:'', bg:'linear-gradient(160deg,#3b3bff 0%,#00005e 100%)' },
+  { title:'Étude de candidature', text:'Notre équipe RH lit votre dossier, CV et portfolio, et le compare au poste.', image:'', bg:'linear-gradient(200deg,#6d6dff 0%,#00003a 100%)' },
+  { title:'Premier échange', text:'Un appel court avec notre équipe RH pour faire connaissance et valider votre profil.', image:'', bg:'linear-gradient(150deg,#2020c8 0%,#05051f 100%)' },
+  { title:'Entretien', text:'Rencontre avec l’équipe, puis réponse rapide, positive ou non.', image:'', bg:'linear-gradient(210deg,#4a4aff 0%,#000026 100%)' }
+];
+function gallery() {
+  const box = document.getElementById('tlBox'); if (!box) return;
+  const n = STEPS.length, G = GALLERY;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  box.innerHTML = `<div class="ag" id="ag">${STEPS.map((st,i)=>`
+    <div class="ag-p" data-i="${i}" tabindex="0" role="button" aria-label="Étape ${i+1} : ${esc(st.title)}">
+      <div class="ag-img" style="background-image:${st.image ? `url('${esc(st.image)}')` : st.bg}"></div><div class="ag-ov"></div>
+      <span class="ag-n">0${i+1}</span>
+      <div class="ag-cap"><h3 class="ag-t">${esc(st.title)}</h3><p class="ag-d">${esc(st.text)}</p></div>
+    </div>`).join('')}</div>`;
+  const panels = [...box.querySelectorAll('.ag-p')];
+  const vertical = () => matchMedia('(max-width:720px)').matches;
+  function setActive(a) {
+    panels.forEach((p,k) => {
+      const on = k === a;
+      p.classList.toggle('on', on);
+      p.style.flexGrow = on ? G.expandRatio : (1 - G.expandRatio) / (n - 1);
+      p.querySelector('.ag-d').style.transitionDelay = on ? (G.stagger*2)+'s' : '0s';
+    });
+  }
+  panels.forEach((p,i) => {
+    p.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && G.trigger === 'hover') setActive(i); });
+    p.addEventListener('click', () => setActive(i));
+    p.addEventListener('focus', () => setActive(i));
+    p.addEventListener('pointermove', e => {
+      if (reduce || vertical() || !p.classList.contains('on') || e.pointerType !== 'mouse') return;
+      const r = p.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+      p.style.transform = `perspective(900px) rotateY(${px*G.tilt}deg) rotateX(${-py*G.tilt}deg)`;
+      p.querySelector('.ag-img').style.transform = `translate(${-px*40*G.parallax}px,${-py*40*G.parallax}px) scale(1.04)`;
+    });
+    p.addEventListener('pointerleave', () => { p.style.transform=''; p.querySelector('.ag-img').style.transform=''; });
+  });
+  const agEl = box.querySelector('.ag'); agEl.classList.add('ag-init');
+  setActive(G.defaultIndex);
+  requestAnimationFrame(() => requestAnimationFrame(() => agEl.classList.remove('ag-init')));
+}
+
+const ICON_BRAND = [
+  '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 22 21H2z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7.2L12 17.8 5.6 21.5l1.7-7.2L2 9.6 9 9z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 22 12 12 22 2 12z"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v6H4zM4 14h10v6H4z"/></svg>'
+];
+function marquee() {
+  const item = i => `<span class="logo">${ICON_BRAND[i % ICON_BRAND.length]}LOGO ${String(i+1).padStart(2,'0')}</span>`;
+  const set = [0,1,2,3,4,5,6,7].map(item).join('');
+  return `<div class="marq"><span class="marq-label">Ils nous font confiance</span><div class="marq-view"><div class="marq-track">${set}${set}</div></div></div>`;
+}
+
+
+/* ---------- Positioning section: variable-proximity text + gradient blinds (WebGL) ---------- */
+let fx = null;
+function stopFx() { if (fx) { fx.stop(); fx = null; } }
+function initPositioning(secId = 'pos', cvId = 'posCv', titleId = 'posT') {
+  const sec = document.getElementById(secId); if (!sec) return;
+  const cv = document.getElementById(cvId), title = titleId ? document.getElementById(titleId) : null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (title) {
+    const LABEL = title.dataset.label;
+    title.setAttribute('aria-label', LABEL);
+    title.innerHTML = LABEL.split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(c => `<span class="ch">${esc(c)}</span>`).join('')}</span>`).join(' ');
+  }
+  const chars = title ? [...title.querySelectorAll('.ch')] : [];
+  const cfg = { from:400, to:900, radius:110, smoothing:0.2 };
+  const cur = chars.map(() => cfg.from);
+  let mx = -9999, my = -9999, running = true, raf = 0, visible = true;
+
+  /* ---- ASCII ember: glyph fire rising from a glowing bed (own implementation) ---- */
+  const ctx = cv.getContext('2d');
+  const CW = 11, CH = 16, RAMP = ' .:-=+*#%@';
+  let cols = 0, rows = 0, heat = new Float32Array(0), dpr = 1, W = 0, H = 0;
+  const pointer = { x:-1, y:-1 };
+  const burst = [];
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const stops = [[0,[0,0,70]],[.35,[0,0,255]],[.7,[120,150,255]],[1,[235,240,255]]];
+  const COLORS = Array.from({length:24}, (_, i) => {
+    const t = i / 23; let k = 0; while (k < stops.length - 2 && t > stops[k+1][0]) k++;
+    const [t0,c0] = stops[k], [t1,c1] = stops[k+1], u = Math.min(1, Math.max(0, (t - t0) / (t1 - t0)));
+    return `rgb(${lerp(c0[0],c1[0],u)|0},${lerp(c0[1],c1[1],u)|0},${lerp(c0[2],c1[2],u)|0})`;
+  });
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const r = sec.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(W / CW); rows = Math.ceil(H / CH); heat = new Float32Array(cols * rows);
+  }
+  function stepFire() {
+    for (let x = 0; x < cols; x++) {                       // glowing bed
+      heat[(rows-1)*cols + x] = .8 + Math.random() * .2;
+      heat[(rows-2)*cols + x] = Math.max(heat[(rows-2)*cols + x], .55 + Math.random() * .3);
+    }
+    for (let y = 0; y < rows - 2; y++) for (let x = 0; x < cols; x++) {
+      const sx = Math.min(cols-1, Math.max(0, x + (Math.random() < .35 ? (Math.random() < .5 ? -1 : 1) : 0)));
+      const below = heat[(y+1)*cols + sx], bl = heat[(y+1)*cols + Math.max(0,sx-1)], br = heat[(y+1)*cols + Math.min(cols-1,sx+1)], b2 = heat[(y+2)*cols + sx];
+      heat[y*cols + x] = Math.max(0, (below*2 + bl + br + b2) / 5 - (.018 + Math.random() * .035));
+    }
+    if (pointer.x >= 0) {                                    // cursor feeds the fire
+      const cx = pointer.x / CW, cy = pointer.y / CH, R = 5;
+      for (let y = Math.max(0, cy-R|0); y < Math.min(rows, cy+R); y++) for (let x = Math.max(0, cx-R|0); x < Math.min(cols, cx+R); x++) {
+        const d = Math.hypot(x - cx, y - cy); if (d < R) heat[y*cols + x] = Math.min(1, heat[y*cols + x] + .5 * (1 - d / R));
+      }
+    }
+    while (burst.length) {                                   // click = burst of heat
+      const bt = burst.pop(), cx = bt.x / CW, cy = bt.y / CH, R = 9;
+      for (let y = Math.max(0, cy-R|0); y < Math.min(rows, cy+R); y++) for (let x = Math.max(0, cx-R|0); x < Math.min(cols, cx+R); x++) {
+        const d = Math.hypot(x - cx, y - cy); if (d < R) heat[y*cols + x] = Math.min(1, heat[y*cols + x] + 1 - d / R);
+      }
+    }
+  }
+  function drawFire() {
+    ctx.fillStyle = '#00001c'; ctx.fillRect(0, 0, W, H);
+    const g = ctx.createLinearGradient(0, H, 0, H * .35);   // bed glow
+    g.addColorStop(0, 'rgba(0,0,255,.6)'); g.addColorStop(1, 'rgba(0,0,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.font = `${CH - 2}px "Geist Mono", ui-monospace, Menlo, Consolas, monospace`; ctx.textBaseline = 'alphabetic';
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const h = heat[y*cols + x]; if (h < .05) continue;
+      const ch = RAMP[Math.min(RAMP.length - 1, (h * RAMP.length) | 0)]; if (ch === ' ') continue;
+      ctx.fillStyle = COLORS[Math.min(23, (h * 23) | 0)]; ctx.globalAlpha = .3 + .7 * h;
+      ctx.fillText(ch, x * CW, (y + 1) * CH - 3);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function onMove(e) {
+    const pt = e.touches ? e.touches[0] : e; if (!pt) return;
+    mx = pt.clientX; my = pt.clientY;
+    const r = sec.getBoundingClientRect(); pointer.x = pt.clientX - r.left; pointer.y = pt.clientY - r.top;
+  }
+  function onLeave() { mx = my = -9999; pointer.x = pointer.y = -1; }
+  function onClick(e) { const r = sec.getBoundingClientRect(); burst.push({ x:e.clientX - r.left, y:e.clientY - r.top }); }
+  sec.addEventListener('pointermove', onMove); sec.addEventListener('pointerleave', onLeave); sec.addEventListener('click', onClick);
+  sec.addEventListener('touchmove', onMove, { passive:true });
+  resize(); window.addEventListener('resize', resize);
+  const io = new IntersectionObserver(es => { visible = es[0].isIntersecting; }); io.observe(sec);
+  if (reduce) { for (let i = 0; i < 40; i++) stepFire(); drawFire(); }
+
+  let last = 0;
+  function frame(now) {
+    if (!running) return;
+    raf = requestAnimationFrame(frame);
+    if (!visible) return;
+    if (!reduce && now - last > 40) { last = now; stepFire(); drawFire(); }   // ~25 fps flicker
+    if (!reduce) chars.forEach((el, i) => {                  // variable proximity text
+      let target = cfg.from;
+      if (mx > -9000) {
+        const r = el.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+        const dist = Math.hypot(mx - cx, my - cy);
+        if (dist < cfg.radius) target = cfg.from + (cfg.to - cfg.from) * (1 - dist / cfg.radius);
+      }
+      cur[i] += (target - cur[i]) * cfg.smoothing;
+      el.style.fontVariationSettings = `'wght' ${cur[i].toFixed(0)}`;
+    });
+  }
+  raf = requestAnimationFrame(frame);
+  fx = { stop() { running = false; cancelAnimationFrame(raf); window.removeEventListener('resize', resize); io.disconnect(); } };
+}
+
+function home() {
+  sticky.classList.remove('on');
+  app.innerHTML = `
+    <section class="hero">
+      <div class="wrap main">
+        <div class="hero-left">
+          <div>
+            <span class="eyebrow">Global Communication Corporate</span>
+            <h1>Rejoignez Global Comm</h1>
+            <p class="lead">Nous accompagnons les marques de grande consommation au Maroc. Découvrez nos offres, ou envoyez-nous votre candidature.</p>
+            <a class="btn" href="#jobs">Voir les offres</a>
+          </div>
+        </div>
+        <div class="hero-img"><div><b>Zone réservée à l’image</b>Image personnalisée à fournir</div></div>
+      </div>
+      <div class="marq-wrap"><div class="wrap">${marquee()}</div></div>
+    </section>
+    <div class="wrap">
+      <section class="sec" id="jobs">
+        <div class="sec-head">
+          <span class="kicker">Offres ouvertes</span>
+          <h2>Des postes qui se voient en rayon</h2>
+          <p>Chez Global Comm, chaque rôle touche de vraies campagnes pour de vraies marques. Dès la première semaine, vous travaillez sur des briefs réels, avec une équipe qui vous fait confiance. Voici ce que nous recherchons aujourd’hui.</p>
+        </div>
+        <div class="grid3">${JOBS.map(j=>`
+          <a class="jcard" href="#/offres/${j.slug}">
+            <div><span class="badge ${j.type}">${typeLabel(j.type)}</span></div>
+            <h3>${esc(j.title)}</h3>
+            <p>${esc(j.summary)}</p>
+            <span class="go">Postuler →</span></a>`).join('')}</div>
+        <div class="card spont dark"><div><h3>Votre poste n’est pas dans la liste ?</h3><p>Les meilleurs profils nous écrivent parfois avant l’offre. Envoyez-nous votre CV.</p></div>
+          <a class="btn ghost" href="#/candidature-spontanee">Candidature spontanée</a></div>
+      </section>
+      <section class="sec">
+        <div class="sec-head"><span class="kicker">Notre processus</span><h2>Comment ça se passe</h2>
+          <p>Un processus court, clair et humain. Pas de tests interminables, pas de silence radio : à chaque étape, vous savez où en est votre dossier et qui est votre interlocuteur. Quatre étapes, du premier clic à la réponse.</p></div>
+        <div id="tlBox"></div>
+      </section>
+      <p class="note">Maquette de démonstration : offres, textes, logos clients et style sont des exemples. Le design final sera fourni séparément.</p>
+    </div>
+    <section class="pos" id="pos">
+      <canvas id="posCv" aria-hidden="true"></canvas><div class="pos-ov"></div>
+      <div class="pos-in">
+        <span class="kick">Qui sommes-nous</span>
+        <h2 class="pos-t" id="posT" data-label="Nous faisons vendre les marques de grande consommation."></h2>
+        <p class="pos-p">Global Comm est une agence de communication intégrée, spécialiste du FMCG au Maroc. Stratégie, création et production sous le même toit, avec l’exigence et la transparence comme règles.</p>
+      </div>
+      <div class="pos-foot"><span>© 2026 Global Communication Corporate</span><a href="https://globalcomm.ma">globalcomm.ma</a></div>
+    </section>`;
+  gallery();
+  initPositioning();
+}
+
+const FI = {
+  contract:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  mode:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>',
+  experience:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
+  languages:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+  education:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 10-10-5L2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>'
+};
+const FACT_LABELS = { contract:'Type de contrat', mode:'Lieu de travail', experience:'Expérience', languages:'Langues', education:'Niveau d’étude' };
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>';
+const checks = arr => `<ul class="checks">${arr.map(x=>`<li>${CHECK}<span>${esc(x)}</span></li>`).join('')}</ul>`;
+
+const CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const ICON_TAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13 13 20a2 2 0 0 1-3 0L3 13V4h9l8 8a1 1 0 0 1 0 1z"/><circle cx="8" cy="8" r="1.2"/></svg>';
+const h2a = t => `<h2>${esc(t)}</h2>`;
+const blist = arr => `<ul class="blist">${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+const daysAgo = d => d <= 0 ? 'Publiée aujourd’hui' : d === 1 ? 'Publiée hier' : `Publiée il y a ${d} jours`;
+const MAIL_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+const PHONE_I = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>';
+const CONTACT = `<section class="contact" id="contact"><canvas id="contactCv" aria-hidden="true"></canvas><div class="pos-ov" style="background:radial-gradient(ellipse at 50% 50%,rgba(0,0,28,.92),rgba(0,0,28,.55) 55%,rgba(0,0,28,0) 85%)"></div><div class="c-in"><div class="logo-ph">Logo</div><h3>Une question sur le poste ?</h3><p>Notre équipe RH vous répond avec plaisir.</p><div class="lines"><a href="mailto:rh@globalcomm.ma">${MAIL_I}rh@globalcomm.ma</a><a href="tel:+212668490907">${PHONE_I}(+212) 668 49 09 07</a></div></div></section>`;
+const FORMCARD = (title, job) => `
+  <aside class="card fcard" id="apply">
+    <div class="prog"><i id="progBar"></i></div>
+    <h3>${title}</h3>
+    <p class="sub">Deux minutes, sans création de compte.</p>
+    <div class="prog-l"><span>Votre dossier</span><b id="progTxt">0 / 6</b></div>
+    ${formHTML(job)}
+    <p class="trust">Vos données servent uniquement à traiter votre candidature.</p>
+  </aside>`;
+
+function job(slug) {
+  const j = JOBS.find(x => x.slug === slug); if (!j) return home();
+  sticky.classList.add('on');
+  app.innerHTML = `
+    <div class="jhw"><div class="jh" style="position:absolute;inset:0"></div>
+    <div class="wrap" style="position:relative">
+      <a class="crumb" href="#/" style="display:inline-block;margin-bottom:var(--s5)">← Toutes les offres</a>
+      <div class="co"><div class="logo">GC</div><div><b>Global Communication Corporate</b><span>${CLOCK} ${daysAgo(j.days)} · <span class="badge ${j.type}" style="display:inline-flex;align-items:center;height:20px">${typeLabel(j.type)}</span></span></div></div>
+      <h1>${esc(j.title)}</h1>
+      <div class="tags">${j.tags.map(t=>`<span class="tag">${FI[t.icon]||ICON_TAG}<span class="k">${esc(t.label)}</span><span class="v">${esc(t.value)}</span></span>`).join('')}</div>
+    </div></div>
+    <div class="wrap">
+      <div class="jbody">
+        <div class="jmain">
+          <section class="sec">${h2a('Présentation du poste')}<p class="lead2">${esc(j.summary)}</p></section>
+          <section class="sec">${h2a('Vos missions')}${blist(j.missions)}</section>
+          <section class="sec">${h2a('Profil recherché')}${blist(j.profil)}</section>
+          <section class="sec">${h2a('Ce que nous offrons')}${blist(j.offre)}</section>
+        </div>
+        ${FORMCARD('Postuler à cette offre', j)}
+      </div>
+      ${CONTACT}
+    </div>`;
+  wireForm();
+  initPositioning('contact','contactCv',null);
+}
+
+function spontanee() {
+  sticky.classList.remove('on');
+  app.innerHTML = `
+    <div class="jhw"><div class="jh" style="position:absolute;inset:0"></div>
+    <div class="wrap" style="position:relative">
+      <a class="crumb" href="#/" style="display:inline-block;margin-bottom:var(--s5)">← Retour aux offres</a>
+      <div class="co"><div class="logo">GC</div><div><b>Global Communication Corporate</b><span>Toujours ouverte</span></div></div>
+      <h1>Candidature spontanée</h1>
+      <div class="tags"><span class="tag">${ICON_TAG}<span class="k">Poste</span><span class="v">À définir ensemble</span></span></div>
+    </div></div>
+    <div class="wrap">
+      <div class="jbody">
+        <div class="jmain">
+          <section class="sec">${h2a('Écrivez-nous, même sans offre')}<p class="lead2">Les meilleurs profils nous écrivent parfois avant l’offre. Présentez-vous et joignez votre CV : nous vous recontactons si un poste correspond.</p></section>
+          <section class="sec">${h2a('Ce qui se passe ensuite')}
+            <ol class="proc"><li><b>1</b>Nous lisons votre dossier</li><li><b>2</b>Nous le gardons en vue pour les postes à venir</li><li><b>3</b>Premier échange si un poste correspond</li></ol></section>
+        </div>
+        ${FORMCARD('Votre candidature', null)}
+      </div>
+      ${CONTACT}
+    </div>`;
+  wireForm();
+  initPositioning('contact','contactCv',null);
+}
+
+function merci() {
+  sticky.classList.remove('on');
+  app.innerHTML = `<div class="wrap pad"><div class="thanks"><div class="tick">✓</div>
+    <h1>Merci pour votre candidature</h1>
+    <p class="lead" style="margin:0 auto 24px">Nous l’avons bien reçue. Notre équipe RH l’étudie et vous répond dès que possible.</p>
+    <p class="meta">Un email de confirmation vient de vous être envoyé.</p>
+    <p style="margin-top:24px"><a class="btn ghost" href="#/">Retour aux offres</a></p></div></div>`;
+}
+
+function route() {
+  stopFx();
+  const h = location.hash || '#/';
+  window.scrollTo(0,0);
+  if (h.startsWith('#/offres/')) job(h.slice(9));
+  else if (h === '#/candidature-spontanee') spontanee();
+  else if (h === '#/merci') merci();
+  else home();
+}
+window.addEventListener('hashchange', route);
+document.getElementById('stickyBtn').addEventListener('click', e => { e.preventDefault(); document.getElementById('apply')?.scrollIntoView({behavior:'smooth'}); });
+document.addEventListener('click', e => { const a = e.target.closest('a[href="#jobs"]'); if (a) { e.preventDefault(); document.getElementById('jobs')?.scrollIntoView({behavior:'smooth'}); } });
+route();
+</script>
+</body>
+</html>
