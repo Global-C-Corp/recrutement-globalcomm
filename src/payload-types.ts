@@ -233,6 +233,8 @@ export interface Application {
  */
 export interface Media {
   id: number;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -253,6 +255,8 @@ export interface Media {
  */
 export interface LogoMedia {
   id: number;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -449,6 +453,8 @@ export interface ApplicationsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -466,6 +472,8 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "logo-media_select".
  */
 export interface LogoMediaSelect<T extends boolean = true> {
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

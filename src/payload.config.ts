@@ -52,6 +52,7 @@ export default buildConfig({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       collections: { media: true, 'logo-media': true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
+      alwaysInsertFields: true, // keep DB schema identical with/without the Blob token
       addRandomSuffix: true, // unguessable blob URLs; files are served via Payload access control
     }),
   ],
