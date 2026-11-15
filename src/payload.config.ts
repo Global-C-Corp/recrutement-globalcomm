@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { privateBlobStorage } from './lib/private-blob-storage'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { fr } from '@payloadcms/translations/languages/fr'
 import sharp from 'sharp'
@@ -48,12 +48,9 @@ export default buildConfig({
     : undefined,
   sharp,
   plugins: [
-    vercelBlobStorage({
-      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: true, 'logo-media': true },
+    privateBlobStorage({
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      alwaysInsertFields: true, // keep DB schema identical with/without the Blob token
-      addRandomSuffix: true, // unguessable blob URLs; files are served via Payload access control
+      collections: ['media', 'logo-media'],
     }),
   ],
 })
