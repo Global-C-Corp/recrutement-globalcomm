@@ -4,11 +4,28 @@ import { useEffect, useRef } from 'react'
 
 // Replace `image` with a URL later; the gradient is the placeholder.
 const GALLERY = { defaultIndex: 0, expandRatio: 0.52, parallax: 0.5, tilt: 8, stagger: 0.06 }
+
 const STEPS = [
-  { title: 'Candidature', text: 'Vous remplissez le formulaire et joignez votre CV. Aucun compte à créer.', image: '', bg: 'linear-gradient(160deg,#3b3bff 0%,#00005e 100%)' },
-  { title: 'Étude de candidature', text: 'Notre équipe RH lit votre dossier, CV et portfolio, et le compare au poste.', image: '', bg: 'linear-gradient(200deg,#6d6dff 0%,#00003a 100%)' },
-  { title: 'Premier échange', text: 'Un appel court avec notre équipe RH pour faire connaissance et valider votre profil.', image: '', bg: 'linear-gradient(150deg,#2020c8 0%,#05051f 100%)' },
-  { title: 'Entretien', text: 'Rencontre avec l’équipe, puis réponse, positive ou non.', image: '', bg: 'linear-gradient(210deg,#4a4aff 0%,#000026 100%)' },
+  {
+    title: 'Candidature',
+    text: 'Vous remplissez le formulaire et joignez votre CV. Aucun compte à créer.',
+    image: '/images/process/01-candidature.avif',
+  },
+  {
+    title: 'Étude de candidature',
+    text: 'Notre équipe RH lit votre dossier, CV et portfolio, et le compare au poste.',
+    image: '/images/process/02-etude-candidature.avif',
+  },
+  {
+    title: 'Premier échange',
+    text: 'Un appel court avec notre équipe RH pour faire connaissance et valider votre profil.',
+    image: '/images/process/03-premier-echange.avif',
+  },
+  {
+    title: 'Entretien',
+    text: 'Rencontre avec l’équipe, puis réponse, positive ou non.',
+    image: '/images/process/04-entretien.avif',
+  },
 ]
 
 export function AccordionGallery() {
