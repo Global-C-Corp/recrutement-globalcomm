@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { getClientLogos, type ClientLogo } from '@/lib/payload'
 
 const Logo = ({ l }: { l: ClientLogo }) => {
-  const img = <Image src={l.src} alt={l.name} width={l.width} height={24} unoptimized={l.isSvg} className="logo-img" />
+  const img = <Image src={l.src} alt={l.name} width={l.width} height={30} unoptimized={l.isSvg} className="logo-img" />
   return l.url ? (
     <a className="logo" href={l.url} target="_blank" rel="noopener noreferrer">{img}</a>
   ) : (
