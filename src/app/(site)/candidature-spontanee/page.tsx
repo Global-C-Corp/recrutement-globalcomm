@@ -4,9 +4,17 @@ import { ApplyForm } from '@/components/ApplyForm'
 import { ContactCard } from '@/components/ContactCard'
 import { TAG_ICONS } from '@/components/icons'
 import { getOpenJobs } from '@/lib/payload'
+import { OG_IMAGE } from '@/lib/seo'
 
 export const revalidate = 60
-export const metadata: Metadata = { title: 'Candidature spontanée' }
+const SPONT_DESC = 'Envoyez-nous votre CV : nous vous recontactons si un poste correspond à votre profil.'
+export const metadata: Metadata = {
+  title: 'Candidature spontanée',
+  description: SPONT_DESC,
+  alternates: { canonical: '/candidature-spontanee' },
+  openGraph: { type: 'website', locale: 'fr_FR', siteName: 'Global Comm Recrutement', title: 'Candidature spontanée', description: SPONT_DESC, url: '/candidature-spontanee', images: [OG_IMAGE] },
+  twitter: { card: 'summary_large_image', title: 'Candidature spontanée', description: SPONT_DESC, images: [OG_IMAGE] },
+}
 
 export default async function SpontaneousPage() {
   const jobs = await getOpenJobs()
