@@ -89,7 +89,7 @@ export function AccordionGallery() {
       <div className="ag">
         {STEPS.map((st, i) => (
           <div className="ag-p" key={st.title} tabIndex={0} role="button" aria-label={`Étape ${i + 1} : ${st.title}`}>
-            <div className="ag-img" style={{ backgroundImage: st.image ? `url('${st.image}')` : st.bg }} />
+            <div className="ag-img" style={{ backgroundImage: `url('${st.image}')` }} />
             <div className="ag-ov" />
             <span className="ag-n">0{i + 1}</span>
             <div className="ag-cap">
