@@ -18,7 +18,7 @@ export default async function HomePage() {
           <div className="hero-left">
             <div>
               <span className="eyebrow">Global Communication Corporate</span>
-              <h1>Rejoignez Global Comm</h1>
+              <h1>Rejoignez<br></>Global Communication Corporate</h1>
               <p className="lead">Nous accompagnons les marques de grande consommation au Maroc. Découvrez nos offres, ou envoyez-nous votre candidature.</p>
               <a className="btn" href="#jobs">Voir les offres</a>
             </div>
