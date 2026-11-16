@@ -24,7 +24,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="hero-visual">
-            <Image src="/images/hero.webp" alt="Deux jeunes professionnels souriants, bras croisés" fill priority sizes="(max-width: 720px) 100vw, 600px" />
+            <Image src="/images/hero.webp" alt="Deux jeunes professionnels souriants, bras croisés" fill priority sizes="(max-width: 720px) 100vw, 736px" />
           </div>
         </div>
         <Marquee />
