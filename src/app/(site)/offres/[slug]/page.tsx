@@ -6,6 +6,7 @@ import { ContactCard } from '@/components/ContactCard'
 import { StickyApply } from '@/components/StickyApply'
 import { ClockIcon, TAG_ICONS } from '@/components/icons'
 import { getJobBySlug } from '@/lib/payload'
+import { OG_IMAGE } from '@/lib/seo'
 import { daysAgo, daysSince, typeLabel } from '@/lib/utils'
 
 export const revalidate = 60
@@ -15,7 +16,15 @@ type Props = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const job = await getJobBySlug(slug)
-  return job ? { title: job.title, description: job.summary } : { title: 'Offre introuvable' }
+  return job
+    ? {
+        title: job.title,
+        description: job.summary,
+        alternates: { canonical: `/offres/${job.slug}` },
+        openGraph: { type: 'website', locale: 'fr_FR', siteName: 'Global Comm Recrutement', title: job.title, description: job.summary, url: `/offres/${job.slug}`, images: [OG_IMAGE] },
+        twitter: { card: 'summary_large_image', title: job.title, description: job.summary, images: [OG_IMAGE] },
+      }
+    : { title: 'Offre introuvable' }
 }
 
 const Bullets = ({ items }: { items?: { text: string }[] | null }) => (

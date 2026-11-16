@@ -3,10 +3,26 @@ import Link from 'next/link'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 
+const SITE_NAME = 'Global Comm Recrutement'
+const DESCRIPTION =
+  'Rejoignez Global Communication Corporate : découvrez nos offres d’emploi et de stage, ou envoyez-nous une candidature spontanée.'
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
   title: { default: 'Recrutement — Global Communication Corporate', template: '%s — Global Comm Recrutement' },
-  description: 'Rejoignez Global Communication Corporate : découvrez nos offres d’emploi et de stage, ou envoyez-nous une candidature spontanée.',
+  description: DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    locale: 'fr_FR',
+    siteName: SITE_NAME,
+    title: 'Recrutement — Global Communication Corporate',
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Recrutement — Global Communication Corporate',
+    description: 'Découvrez nos offres d’emploi et de stage chez Global Comm.',
+  },
 }
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 }
 
