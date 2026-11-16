@@ -38,6 +38,7 @@ function FileDrop({
         id={id}
         tabIndex={0}
         role="button"
+        aria-describedby={id === 'dropCv' ? 'err-cv' : undefined}
         style={compact ? { padding: 12 } : undefined}
         onClick={() => { if (!file) input.current?.click() }}
         onKeyDown={(e) => { if (e.key === 'Enter' && !file) input.current?.click() }}
@@ -69,8 +70,11 @@ export function ApplyForm({ title, job, openJobs = [] }: Props) {
   const honey = useRef<HTMLInputElement>(null)
 
   const done = [v.nom.trim(), v.email.trim(), v.tel.trim(), cv, v.portfolio.trim() || pf, v.consent].filter(Boolean).length
-  const set = (k: keyof typeof v) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  const set = (k: keyof typeof v) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setV((s) => ({ ...s, [k]: e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value }))
+    // editing a field clears its error (visual + aria-invalid)
+    setBad((b) => (b[k] || (k === 'nom' && b.fullName) ? { ...b, [k]: false, ...(k === 'nom' ? { fullName: false } : {}) } : b))
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -136,17 +140,17 @@ export function ApplyForm({ title, job, openJobs = [] }: Props) {
           </div>
         )}
         <div className={(bad.nom || bad.fullName ? 'field bad' : 'field')}>
-          <label>Nom complet<input type="text" name="nom" autoComplete="name" value={v.nom} onChange={set('nom')} /></label>
-          <div className="err">Indiquez votre nom complet.</div>
+          <label>Nom complet<input type="text" name="nom" autoComplete="name" value={v.nom} onChange={set('nom')} aria-invalid={bad.nom || bad.fullName || undefined} aria-describedby="err-nom" /></label>
+          <div className="err" id="err-nom" role={bad.nom || bad.fullName ? 'alert' : undefined}>Indiquez votre nom complet.</div>
         </div>
         <div className="row">
           <div className={cls('email')}>
-            <label>Email<input type="email" name="email" autoComplete="email" value={v.email} onChange={set('email')} /></label>
-            <div className="err">Indiquez un email valide.</div>
+            <label>Email<input type="email" name="email" autoComplete="email" value={v.email} onChange={set('email')} aria-invalid={bad.email || undefined} aria-describedby="err-email" /></label>
+            <div className="err" id="err-email" role={bad.email ? 'alert' : undefined}>Indiquez un email valide.</div>
           </div>
           <div className={cls('tel')}>
-            <label>Téléphone<input type="tel" name="tel" autoComplete="tel" placeholder="06 00 00 00 00" value={v.tel} onChange={set('tel')} /></label>
-            <div className="err">Indiquez un numéro valide.</div>
+            <label>Téléphone<input type="tel" name="tel" autoComplete="tel" placeholder="06 00 00 00 00" value={v.tel} onChange={set('tel')} aria-invalid={bad.tel || undefined} aria-describedby="err-tel" /></label>
+            <div className="err" id="err-tel" role={bad.tel ? 'alert' : undefined}>Indiquez un numéro valide.</div>
           </div>
         </div>
         <div className={cls('cv')}>
@@ -157,7 +161,7 @@ export function ApplyForm({ title, job, openJobs = [] }: Props) {
             onError={(m) => { setCvMsg(m); setBad((b) => ({ ...b, cv: true })) }}
             idle={<>Glissez votre CV ici ou <u>parcourez vos fichiers</u></>}
           />
-          <div className="err">{cvMsg}</div>
+          <div className="err" id="err-cv" role={bad.cv ? 'alert' : undefined}>{cvMsg}</div>
         </div>
         <div className="field">
           <label>Portfolio / LinkedIn <span className="opt">(facultatif)</span>
@@ -167,10 +171,10 @@ export function ApplyForm({ title, job, openJobs = [] }: Props) {
         </div>
         <div className={cls('consent')}>
           <label className="check">
-            <input type="checkbox" name="consent" checked={v.consent} onChange={set('consent')} />
+            <input type="checkbox" name="consent" checked={v.consent} onChange={set('consent')} aria-invalid={bad.consent || undefined} aria-describedby="err-consent" />
             <span>J’accepte que Global Comm conserve mes données pour traiter ma candidature (loi 09-08).</span>
           </label>
-          <div className="err">Votre accord est nécessaire pour envoyer la candidature.</div>
+          <div className="err" id="err-consent" role={bad.consent ? 'alert' : undefined}>Votre accord est nécessaire pour envoyer la candidature.</div>
         </div>
         <div className="hp" aria-hidden="true">
           <label>Ne pas remplir<input ref={honey} type="text" name="website" tabIndex={-1} autoComplete="off" /></label>

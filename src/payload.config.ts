@@ -30,7 +30,8 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL || '' },
+    // pg already treats sslmode=require as verify-full; say so explicitly to silence the deprecation warning.
+    pool: { connectionString: (process.env.DATABASE_URL || '').replace(/sslmode=(require|prefer|verify-ca)/, 'sslmode=verify-full') },
     // Dev: auto-push schema. Production: set PAYLOAD_PUSH=true once for the first deploy, or use migrations.
     push: process.env.NODE_ENV !== 'production' || process.env.PAYLOAD_PUSH === 'true',
   }),
