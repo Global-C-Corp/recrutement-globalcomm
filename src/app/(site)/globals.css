@@ -50,6 +50,9 @@ p.lead { color:var(--g600); font-size:18px; max-width:560px; margin:0 0 var(--s5
 .hero p.lead { color:rgba(255,255,255,.72); }
 .hero .btn { background:#fff; color:var(--ink); border-color:#fff; }
 .hero .btn:hover { background:#eaeaea; border-color:#eaeaea; }
+.hero-visual { position:relative; align-self:end; height:100%; min-height:300px; }
+.hero-visual img { object-fit:contain; object-position:bottom center; }
+.contact .c-logo { height:56px; width:auto; }
 .eyebrow { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:var(--s3); font-weight:500; }
 .hero-img { align-self:end; height:100%; min-height:300px; border:1px dashed rgba(255,255,255,.3); border-bottom:0; border-radius:var(--r-lg) var(--r-lg) 0 0; display:grid; place-items:center; text-align:center; color:rgba(255,255,255,.55); font-size:13px; padding:var(--s5); background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 12px,transparent 12px 24px); }
 .hero-img b { display:block; color:rgba(255,255,255,.85); font-weight:500; margin-bottom:var(--s1); }
@@ -215,6 +218,7 @@ input:focus,select:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 
   .ag-p.on .ag-n { top:16px; bottom:auto; left:20px; right:auto; }
   .ag-cap { right:56px; bottom:18px; }
   .hero-img { min-height:260px; order:3; }
+  .hero-visual { min-height:320px; order:3; }
   .hero-left { padding-bottom:0; }
   .marq-wrap { bottom:var(--s4); }
 }

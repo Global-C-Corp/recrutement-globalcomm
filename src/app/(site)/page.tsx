@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Marquee } from '@/components/Marquee'
 import { AccordionGallery } from '@/components/AccordionGallery'
@@ -22,7 +23,9 @@ export default async function HomePage() {
               <a className="btn" href="#jobs">Voir les offres</a>
             </div>
           </div>
-          <div className="hero-img"><div><b>Zone réservée à l’image</b>Image personnalisée à fournir</div></div>
+          <div className="hero-visual">
+            <Image src="/images/hero.avif" alt="Deux jeunes professionnels souriants, bras croisés" fill priority sizes="(max-width: 720px) 100vw, 480px" />
+          </div>
         </div>
         <Marquee />
       </section>
