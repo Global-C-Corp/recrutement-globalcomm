@@ -52,8 +52,8 @@ export const getClientLogos = unstable_cache(
       const img = row.image
       if (!img || typeof img !== 'object' || !img.url) continue
       const isSvg = img.mimeType === 'image/svg+xml'
-      const w = img.width && img.height ? Math.round((img.width / img.height) * 24) : 96
-      out.push({ id: row.id ?? String(out.length), name: row.name, url: row.url ?? null, src: img.url, width: Math.max(24, Math.min(w, 240)), isSvg })
+      const w = img.width && img.height ? Math.round((img.width / img.height) * 35) : 96
+      out.push({ id: row.id ?? String(out.length), name: row.name, url: row.url ?? null, src: img.url, width: Math.max(35, Math.min(w, 350)), isSvg })
     }
     return out
   },
