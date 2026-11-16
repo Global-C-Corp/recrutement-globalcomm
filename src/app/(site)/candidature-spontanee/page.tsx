@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ApplyForm } from '@/components/ApplyForm'
 import { ContactCard } from '@/components/ContactCard'
@@ -25,7 +26,7 @@ export default async function SpontaneousPage() {
         <div className="wrap">
           <Link className="crumb" href="/">← Retour aux offres</Link>
           <div className="co">
-            <div className="logo-sq">GC</div>
+            <div className="logo-sq"><Image src="/images/logo-globalcomm.svg" alt="Global Communication Corporate" width={58} height={28} unoptimized /></div>
             <div><b>Global Communication Corporate</b><span className="meta-l">Toujours ouverte</span></div>
           </div>
           <h1>Candidature spontanée</h1>
