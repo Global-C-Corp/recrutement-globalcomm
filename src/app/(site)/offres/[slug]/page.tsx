@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ApplyForm } from '@/components/ApplyForm'
@@ -43,7 +44,7 @@ export default async function JobPage({ params }: Props) {
         <div className="wrap">
           <Link className="crumb" href="/">← Toutes les offres</Link>
           <div className="co">
-            <div className="logo-sq">GC</div>
+            <div className="logo-sq"><Image src="/images/logo-globalcomm.svg" alt="Global Communication Corporate" width={58} height={28} unoptimized /></div>
             <div>
               <b>Global Communication Corporate</b>
               <span className="meta-l"><ClockIcon /> {daysAgo(daysSince(job.createdAt))} · <span className={`badge ${job.type}`}>{typeLabel(job.type)}</span></span>
